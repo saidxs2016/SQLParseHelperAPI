@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  fastapi:
+    container_name: fastapi-docker-container
+    image: fastapi-docker-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "91:8000" # Dış dünyadan 91 portuna yönlendirme
