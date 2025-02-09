@@ -28,7 +28,8 @@ class SQLParseRequest(BaseModel):
 # SQL Manipulation için Pydantic model
 class SQLManipulationRequest(BaseModel):
     user_sql: str = Field(..., min_length=1, description="Manipüle edilecek SQL sorgusu.")
-    limit: int = Field(100, ge=1, description="Sonuç setine eklenecek maksimum limit.")
+    wirh_order: bool = Field()
+    limit: int = Field(10, ge=1, description="Sonuç setine eklenecek maksimum limit.")
     dialect: str = Field(
         "default",
         description="Hedef SQL dialect'i. Desteklenenler: mysql, postgres, oracle, tsql, sqlite, default.",
@@ -71,8 +72,8 @@ async def manipulate_sql(request: SQLManipulationRequest):
         # Gelen SQL'i parse et
         parsed = parse_one(request.user_sql)
 
-        # Eğer sorguda ORDER BY yoksa, varsayılan bir sıralama ekle
-        if not parsed.find(Order):  # ORDER BY var mı kontrol et
+        # with_order=True ise ORDER BY ekle (eğer yoksa)
+        if request.with_order and not parsed.find(Order):  # ORDER BY var mı kontrol et
             try:
                 parsed = parsed.order_by("1")  # Varsayılan olarak ilk sütuna göre sırala
             except Exception as e:
