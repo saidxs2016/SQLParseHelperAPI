@@ -28,7 +28,7 @@ class SQLParseRequest(BaseModel):
 # SQL Manipulation için Pydantic model
 class SQLManipulationRequest(BaseModel):
     user_sql: str = Field(..., min_length=1, description="Manipüle edilecek SQL sorgusu.")
-    wirh_order: bool = Field()
+    with_order: bool = Field(False, description="ORDER BY eklenip eklenmeyeceğini belirler.")
     limit: int = Field(10, ge=1, description="Sonuç setine eklenecek maksimum limit.")
     dialect: str = Field(
         "default",
